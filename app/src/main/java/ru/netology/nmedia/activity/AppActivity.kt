@@ -21,13 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.di.FirebaseMessagingModule
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
-@Inject
-lateinit var appAuth: AppAuth
+    @Inject
+    lateinit var appAuth: AppAuth
+    lateinit var googleApiAvailability: GoogleApiAvailability
+
     private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +72,7 @@ lateinit var appAuth: AppAuth
             println(token)
         }
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        FirebaseMessagingModule.provideFirebaseMessaging().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 println("some stuff happened: ${task.exception}")
                 return@addOnCompleteListener
@@ -98,7 +101,7 @@ lateinit var appAuth: AppAuth
                     R.id.signin -> {
                         // TODO: just hardcode it, implementation must be in homework
                         appAuth.setAuth(5, "x-token")
-                            true
+                        true
                     }
 
                     R.id.signup -> {
@@ -109,7 +112,7 @@ lateinit var appAuth: AppAuth
 
                     R.id.signout -> {
                         // TODO: just hardcode it, implementation must be in homework
-                       appAuth.removeAuth()
+                        appAuth.removeAuth()
                         true
                     }
 

@@ -9,7 +9,7 @@ import ru.netology.nmedia.repository.PostRepositoryImpl
 import javax.inject.Singleton
 
 
-@InstallIn(Singleton::class)
+@InstallIn(SingletonComponent::class)
 @Module
 interface RepositoryModule {
 
