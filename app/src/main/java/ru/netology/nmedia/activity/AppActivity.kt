@@ -21,15 +21,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.di.FirebaseMessagingModule
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
     @Inject
     lateinit var appAuth: AppAuth
+    @Inject
     lateinit var googleApiAvailability: GoogleApiAvailability
+    @Inject
+    lateinit var firebaseInstallations: FirebaseInstallations
+    @Inject
+    lateinit var firebaseMessaging: FirebaseMessaging
 
     private val viewModel: AuthViewModel by viewModels()
 
@@ -62,7 +67,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             invalidateOptionsMenu()
         }
 
-        FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+        firebaseInstallations.id.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 println("some stuff happened: ${task.exception}")
                 return@addOnCompleteListener
@@ -72,7 +77,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             println(token)
         }
 
-        FirebaseMessagingModule.provideFirebaseMessaging().token.addOnCompleteListener { task ->
+        firebaseMessaging.token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 println("some stuff happened: ${task.exception}")
                 return@addOnCompleteListener
@@ -136,7 +141,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun checkGoogleApiAvailability() {
-        with(GoogleApiAvailability.getInstance()) {
+        with(googleApiAvailability) {
             val code = isGooglePlayServicesAvailable(this@AppActivity)
             if (code == ConnectionResult.SUCCESS) {
                 return@with
@@ -149,7 +154,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 .show()
         }
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+        firebaseMessaging.token.addOnSuccessListener {
             println(it)
         }
     }
