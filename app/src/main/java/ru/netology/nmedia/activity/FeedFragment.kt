@@ -66,9 +66,9 @@ class FeedFragment : Fragment() {
                     .show()
             }
         }
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
-            binding.emptyText.isVisible = state.empty
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.loading)
+            binding.emptyText.isVisible = state.loading
         }
         viewModel.newerCount.observe(viewLifecycleOwner) { state ->
             // TODO: just log it, interaction must be in homework
